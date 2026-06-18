@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+:root {
+  --brand-forest: #0F5132;
+  --brand-forest-light: #157347;
+  --brand-amber: #F5A623;
+  --brand-amber-light: #FBBF24;
+  --brand-cream: #FAFAF7;
+  --brand-slate: #1C2B3A;
+  --brand-slate-mid: #3D5166;
+  --brand-slate-light: #8FA3B8;
+  --brand-white: #FFFFFF;
+  --brand-success: #16A34A;
+  --brand-error: #DC2626;
+  --brand-border: #E2E8F0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--brand-cream);
+  color: var(--brand-slate);
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--brand-slate-light); border-radius: 3px; }
+
+/* Transparency strip — the signature element */
+.transparency-strip {
+  background: linear-gradient(135deg, #0F5132 0%, #157347 100%);
+  border-top: 2px solid var(--brand-amber);
+}
+
+.transparency-strip-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.transparency-strip-row:last-child { border-bottom: none; }
+
+/* Verified badge glow */
+.verified-glow {
+  box-shadow: 0 0 0 2px var(--brand-amber), 0 0 12px rgba(245,166,35,0.3);
+}
+
+/* Card hover lift */
+.card-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(15,81,50,0.12);
+}
+
+/* Animated underline for nav links */
+.nav-link {
+  position: relative;
+  text-decoration: none;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--brand-amber);
+  transition: width 0.25s ease;
+}
+.nav-link:hover::after { width: 100%; }
+
+/* Blockchain badge */
+.stellar-badge {
+  background: linear-gradient(135deg, #0F5132, #1a7a4a);
+  border: 1px solid rgba(245,166,35,0.4);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.5s ease forwards; }
+
+@keyframes pulse-amber {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245,166,35,0.4); }
+  50%       { box-shadow: 0 0 0 6px rgba(245,166,35,0); }
+}
+.pulse-amber { animation: pulse-amber 2s infinite; }
