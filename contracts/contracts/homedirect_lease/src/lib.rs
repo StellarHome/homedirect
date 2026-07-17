@@ -1,17 +1,17 @@
 #![no_std]
 
-use soroban_sdk::{contract, contractimpl, Env};
+use soroban_sdk::{contract, contractimpl, Address, Env};
 
 mod logic;
 mod storage;
 mod types;
 
 #[contract]
-pub struct PaymentRegistryContract;
+pub struct LeaseContract;
 
 #[contractimpl]
-impl PaymentRegistryContract {
-    pub fn initialize(env: Env, admin: soroban_sdk::Address) {
+impl LeaseContract {
+    pub fn initialize(env: Env, admin: Address) -> Result<(), types::Error> {
         logic::initialize(&env, admin)
     }
 
@@ -19,28 +19,63 @@ impl PaymentRegistryContract {
         1
     }
 
-    pub fn create_payment_record(
+    pub fn create_lease(
         env: Env,
-        merchant_address: soroban_sdk::Address,
+        landlord: Address,
+        tenant: Address,
+        property_id: soroban_sdk::String,
+        monthly_rent: i128,
+        security_deposit: i128,
+        duration_months: u32,
+    ) -> Result<soroban_sdk::String, types::Error> {
+        logic::create_lease(&env, landlord, tenant, property_id, monthly_rent, security_deposit, duration_months)
+    }
+
+    pub fn pay_rent(
+        env: Env,
+        lease_id: soroban_sdk::String,
         amount: i128,
-        asset: soroban_sdk::Address,
-    ) -> Result<soroban_sdk::String, crate::types::Error> {
-        logic::create_payment_record(&env, merchant_address, amount, asset)
+        payer: Address,
+    ) -> Result<(), types::Error> {
+        logic::pay_rent(&env, lease_id, amount, payer)
     }
 
-    pub fn update_payment_status(
+    pub fn release_deposit(
         env: Env,
-        payment_id: soroban_sdk::String,
-        status: crate::types::PaymentStatus,
-    ) -> Result<(), crate::types::Error> {
-        logic::update_payment_status(&env, payment_id, status)
+        lease_id: soroban_sdk::String,
+        to_tenant: bool,
+    ) -> Result<(), types::Error> {
+        logic::release_deposit(&env, lease_id, to_tenant)
     }
 
-    pub fn get_payment(
+    pub fn raise_dispute(
         env: Env,
-        payment_id: soroban_sdk::String,
-    ) -> Option<crate::types::PaymentRecord> {
-        storage::get_payment(&env, payment_id)
+        lease_id: soroban_sdk::String,
+        party: Address,
+    ) -> Result<(), types::Error> {
+        logic::raise_dispute(&env, lease_id, party)
+    }
+
+    pub fn resolve_dispute(
+        env: Env,
+        lease_id: soroban_sdk::String,
+        winner: Address,
+    ) -> Result<(), types::Error> {
+        logic::resolve_dispute(&env, lease_id, winner)
+    }
+
+    pub fn get_lease(
+        env: Env,
+        lease_id: soroban_sdk::String,
+    ) -> Option<types::Lease> {
+        storage::get_lease(&env, lease_id)
+    }
+
+    pub fn get_lease_by_property(
+        env: Env,
+        property_id: soroban_sdk::String,
+    ) -> Option<soroban_sdk::String> {
+        storage::get_lease_by_property(&env, property_id)
     }
 }
 

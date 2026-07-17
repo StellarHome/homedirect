@@ -1,49 +1,48 @@
-use soroban_sdk::{contracttype, contracterror};
+use soroban_sdk::{contracttype, contracterror, Address, String, Symbol};
 
 #[contracttype]
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum DataKey {
     Version,
     Admin,
-    ExchangeRate(Symbol), // Lưu trữ tỷ giá theo cặp tiền
-    Payment(String),
+    Lease(String),
+    PropertyLease(String), // property_id -> lease_id mapping
 }
 
 #[contracterror]
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum Error {
-    PaymentAlreadyExists = 1,
+    AlreadyInitialized = 1,
     Unauthorized = 2,
-    PaymentNotFound = 3,
+    LeaseNotFound = 3,
+    LeaseAlreadyExists = 4,
+    InvalidLeaseStatus = 5,
+    InsufficientPayment = 6,
+    PropertyAlreadyLeased = 7,
 }
 
 #[contracttype]
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub enum Currency {
-    BTC,
-    USDC,
-    ETH,
-    VND, // Hỗ trợ thêm cả VNĐ cho Sếp
-}
-
-use soroban_sdk::{Address, String, Symbol};
-
-#[contracttype]
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub enum PaymentStatus {
-    Pending,
-    Confirmed,
-    Failed,
-    Expired,
+pub enum LeaseStatus {
+    Active,
+    Completed,
+    Disputed,
+    Terminated,
 }
 
 #[contracttype]
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub struct PaymentRecord {
-    pub payment_id: String,
-    pub merchant_address: Address,
-    pub amount: i128,
-    pub asset: Address,
-    pub status: PaymentStatus,
-    pub timestamp: u64,
+pub struct Lease {
+    pub lease_id: String,
+    pub property_id: String,
+    pub landlord: Address,
+    pub tenant: Address,
+    pub monthly_rent: i128,
+    pub security_deposit: i128,
+    pub duration_months: u32,
+    pub start_timestamp: u64,
+    pub end_timestamp: u64,
+    pub status: LeaseStatus,
+    pub rent_paid_months: u32,
+    pub platform_fee_collected: bool,
 }
