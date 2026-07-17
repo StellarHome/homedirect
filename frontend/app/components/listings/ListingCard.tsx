@@ -24,10 +24,10 @@ export function ListingCard({ listing }: { listing: Listing }) {
   const serviceFee = Math.round(listing.monthlyRent * 12 * 0.05);
 
   return (
-    <article className="bg-white rounded-2xl overflow-hidden shadow-[0_2px_16px_rgba(15,81,50,0.08)] card-lift">
+    <article className="bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow-[0_2px_16px_rgba(15,81,50,0.08)] card-lift">
       {/* Image */}
       <Link href={`/listings/${listing.id}`} className="block relative">
-        <div className="h-48 bg-gradient-to-br from-[#0F5132]/10 to-[#157347]/20 relative overflow-hidden">
+        <div className="h-40 sm:h-48 bg-gradient-to-br from-[#0F5132]/10 to-[#157347]/20 relative overflow-hidden">
           {/* Placeholder image gradient */}
           <div className="absolute inset-0 flex items-center justify-center text-[#0F5132]/30">
             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -59,13 +59,13 @@ export function ListingCard({ listing }: { listing: Listing }) {
       </Link>
 
       {/* Content */}
-      <div className="p-4">
+      <div className="p-3 sm:p-4">
         <div className="flex items-start justify-between gap-2 mb-1">
           <h3 className="font-semibold text-[#1C2B3A] text-sm leading-snug line-clamp-1">
             {listing.title}
           </h3>
           {listing.onChain && (
-            <span className="flex-shrink-0 stellar-badge text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full text-white">
+            <span className="flex-shrink-0 stellar-badge text-[8px] sm:text-[9px] font-bold uppercase tracking-widest px-1.5 sm:px-2 py-0.5 rounded-full text-white">
               On-chain
             </span>
           )}
@@ -93,24 +93,24 @@ export function ListingCard({ listing }: { listing: Listing }) {
         </div>
 
         {/* Transparency strip (mini) */}
-        <div className="bg-[#0F5132] rounded-xl p-3 text-white mb-3">
-          <div className="flex justify-between text-xs mb-1">
+        <div className="bg-[#0F5132] rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-white mb-3">
+          <div className="flex justify-between text-[10px] sm:text-xs mb-1">
             <span className="text-white/70">Annual rent</span>
-            <span className="font-medium">{FMT(listing.monthlyRent * 12)}</span>
+            <span className="font-medium text-[11px] sm:text-xs">{FMT(listing.monthlyRent * 12)}</span>
           </div>
-          <div className="flex justify-between text-xs mb-2">
+          <div className="flex justify-between text-[10px] sm:text-xs mb-1.5 sm:mb-2">
             <span className="text-white/70">HomeDirect fee (5%)</span>
-            <span className="font-medium text-[#F5A623]">{FMT(serviceFee)}</span>
+            <span className="font-medium text-[#F5A623] text-[11px] sm:text-xs">{FMT(serviceFee)}</span>
           </div>
-          <div className="border-t border-white/20 pt-2 flex justify-between items-center">
-            <span className="text-[10px] uppercase tracking-widest text-[#F5A623]">You pay</span>
-            <span className="font-bold text-sm">{FMT(listing.monthlyRent * 12 + serviceFee)}</span>
+          <div className="border-t border-white/20 pt-1.5 sm:pt-2 flex justify-between items-center">
+            <span className="text-[9px] sm:text-[10px] uppercase tracking-widest text-[#F5A623]">You pay</span>
+            <span className="font-bold text-xs sm:text-sm">{FMT(listing.monthlyRent * 12 + serviceFee)}</span>
           </div>
         </div>
 
         <Link
           href={`/listings/${listing.id}`}
-          className="block w-full text-center bg-[#0F5132] hover:bg-[#157347] text-white text-sm font-medium py-2.5 rounded-xl transition-colors"
+          className="block w-full text-center bg-[#0F5132] hover:bg-[#157347] text-white text-xs sm:text-sm font-medium py-2 sm:py-2.5 rounded-lg sm:rounded-xl transition-colors"
         >
           View Property →
         </Link>

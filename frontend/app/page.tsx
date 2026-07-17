@@ -41,7 +41,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-[#FAFAF7]">
       {/* HERO */}
-      <section className="relative overflow-hidden bg-[#0F5132] pt-20 pb-32">
+      <section className="relative overflow-hidden bg-[#0F5132] pt-16 pb-24 sm:pt-20 sm:pb-32">
         <div
           className="absolute inset-0 opacity-5"
           style={{
@@ -60,18 +60,18 @@ export default function HomePage() {
             </span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl font-bold text-white leading-tight mb-6 max-w-4xl mx-auto">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6 max-w-4xl mx-auto">
             Rent a home in Nigeria.
             <br />
             <span className="text-[#F5A623]">No agent. No inflated fees.</span>
           </h1>
 
-          <p className="text-lg text-white/70 mb-10 max-w-xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg text-white/70 mb-8 sm:mb-10 max-w-xl mx-auto leading-relaxed">
             HomeDirectconnects landlords and tenants directly. One transparent 5%
             fee replaces agent commissions, lawyer fees, and the usual drama.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-12 sm:mb-16">
             <Link href="/listings">
               <Button size="lg" variant="amber">
                 Browse available homes
@@ -88,11 +88,11 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-2xl mx-auto">
             {STATS.map((s) => (
-              <div key={s.label} className="bg-white/10 rounded-2xl py-4 px-3">
-                <div className="text-2xl font-bold text-[#F5A623]">{s.value}</div>
-                <div className="text-xs text-white/60 mt-0.5">{s.label}</div>
+              <div key={s.label} className="bg-white/10 rounded-xl sm:rounded-2xl py-3 sm:py-4 px-2 sm:px-3">
+                <div className="text-xl sm:text-2xl font-bold text-[#F5A623]">{s.value}</div>
+                <div className="text-[10px] sm:text-xs text-white/60 mt-0.5">{s.label}</div>
               </div>
             ))}
           </div>
@@ -100,8 +100,8 @@ export default function HomePage() {
       </section>
 
       {/* SEARCH */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 -mt-8 relative z-10 mb-20">
-        <div className="bg-white rounded-2xl shadow-[0_8px_40px_rgba(15,81,50,0.14)] p-4 flex flex-col sm:flex-row gap-3">
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 -mt-6 sm:-mt-8 relative z-10 mb-16 sm:mb-20">
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-[0_8px_40px_rgba(15,81,50,0.14)] p-3 sm:p-4 flex flex-col sm:flex-row gap-3">
           <div className="flex-1">
             <label className="block text-[10px] font-semibold uppercase tracking-widest text-[#8FA3B8] mb-1.5">
               Location
@@ -149,25 +149,25 @@ export default function HomePage() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
-        <div className="text-center mb-12">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 sm:mb-24">
+        <div className="text-center mb-8 sm:mb-12">
           <p className="text-xs font-semibold uppercase tracking-widest text-[#F5A623] mb-2">
             Simple by design
           </p>
-          <h2 className="text-3xl font-bold text-[#1C2B3A]">
+          <h2 className="text-2xl sm:text-3xl font-bold text-[#1C2B3A]">
             How HomeDirectworks
           </h2>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {HOW_IT_WORKS.map((item) => (
             <div
               key={item.step}
-              className="bg-white rounded-2xl p-6 shadow-[0_2px_16px_rgba(15,81,50,0.06)]"
+              className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-[0_2px_16px_rgba(15,81,50,0.06)]"
             >
-              <div className="text-[10px] font-bold text-[#F5A623] uppercase tracking-widest mb-3">
+              <div className="text-[10px] font-bold text-[#F5A623] uppercase tracking-widest mb-2 sm:mb-3">
                 {item.step}
               </div>
-              <div className="w-10 h-10 rounded-xl bg-[#ECFDF5] flex items-center justify-center text-[#0F5132] mb-4 text-lg font-bold">
+              <div className="w-10 h-10 rounded-xl bg-[#ECFDF5] flex items-center justify-center text-[#0F5132] mb-3 sm:mb-4 text-lg font-bold">
                 {item.step}
               </div>
               <h3 className="font-semibold text-[#1C2B3A] text-sm mb-2">
@@ -180,13 +180,13 @@ export default function HomePage() {
       </section>
 
       {/* FEATURED LISTINGS */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
-        <div className="flex items-end justify-between mb-8">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 sm:mb-24">
+        <div className="flex items-end justify-between mb-6 sm:mb-8">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest text-[#F5A623] mb-1">
               Available now
             </p>
-            <h2 className="text-2xl font-bold text-[#1C2B3A]">
+            <h2 className="text-xl sm:text-2xl font-bold text-[#1C2B3A]">
               Vacant homes, verified landlords
             </h2>
           </div>
@@ -197,39 +197,49 @@ export default function HomePage() {
             View all listings
           </Link>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {featuredListings.map((listing) => (
             <ListingCard key={listing.id} listing={listing} />
           ))}
         </div>
+        {/* Mobile-only view all link */}
+        <div className="mt-4 sm:hidden text-center">
+          <Link
+            href="/listings"
+            className="text-sm font-medium text-[#0F5132] hover:underline"
+          >
+            View all listings →
+          </Link>
+        </div>
       </section>
 
       {/* OPEN SOURCE BANNER */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
-        <div className="bg-[#1C2B3A] rounded-3xl p-10 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div>
-            <Badge variant="stellar" className="mb-4">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 sm:mb-24">
+        <div className="bg-[#1C2B3A] rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8">
+          <div className="text-center md:text-left">
+            <Badge variant="stellar" className="mb-3 sm:mb-4">
               Open Source Project
             </Badge>
-            <h2 className="text-2xl font-bold text-white mb-3">
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3">
               Built in public. Contributions welcome.
             </h2>
-            <p className="text-[#8FA3B8] max-w-md text-sm leading-relaxed">
+            <p className="text-[#8FA3B8] max-w-md text-xs sm:text-sm leading-relaxed">
               HomeDirectis MIT-licensed and maintained openly on GitHub. Whether
               you write Rust smart contracts, TypeScript frontends, or just want to
               file issues — you belong here.
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
+          <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0 w-full md:w-auto">
             <a
               href="https://github.com/homedirect-africa/homedirect"
               target="_blank"
               rel="noopener noreferrer"
+              className="flex-1 sm:flex-none"
             >
               <Button
                 variant="secondary"
                 size="lg"
-                className="!bg-white/10 !border-white/20 !text-white hover:!bg-white/20 gap-2"
+                className="!bg-white/10 !border-white/20 !text-white hover:!bg-white/20 gap-2 w-full sm:w-auto"
               >
                 View on GitHub
               </Button>
@@ -238,8 +248,9 @@ export default function HomePage() {
               href="https://github.com/homedirect-africa/homedirect/blob/main/CONTRIBUTING.md"
               target="_blank"
               rel="noopener noreferrer"
+              className="flex-1 sm:flex-none"
             >
-              <Button variant="amber" size="lg">
+              <Button variant="amber" size="lg" className="w-full sm:w-auto">
                 Contribute
               </Button>
             </a>

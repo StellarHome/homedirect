@@ -8,49 +8,49 @@ export function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-[#E2E8F0]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-14 sm:h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-lg bg-[#0F5132] flex items-center justify-center group-hover:bg-[#157347] transition-colors">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2">
+          <Link href="/" className="flex items-center gap-2 sm:gap-2.5 group">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#0F5132] flex items-center justify-center group-hover:bg-[#157347] transition-colors">
+              <svg className="w-4 h-4 sm:w-[18px] sm:h-[18px]" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2">
                 <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                 <polyline points="9 22 9 12 15 12 15 22" />
               </svg>
             </div>
-            <span className="font-bold text-lg text-[#0F5132] tracking-tight">
+            <span className="font-bold text-base sm:text-lg text-[#0F5132] tracking-tight">
               Home<span className="text-[#F5A623]">Direct</span>
             </span>
           </Link>
 
           {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-6">
-            <Link href="/listings" className="nav-link text-sm text-[#3D5166] hover:text-[#0F5132] font-medium transition-colors">
+          <div className="hidden md:flex items-center gap-4 sm:gap-6">
+            <Link href="/listings" className="nav-link text-xs sm:text-sm text-[#3D5166] hover:text-[#0F5132] font-medium transition-colors">
               Browse Homes
             </Link>
-            <Link href="/landlord" className="nav-link text-sm text-[#3D5166] hover:text-[#0F5132] font-medium transition-colors">
+            <Link href="/landlord" className="nav-link text-xs sm:text-sm text-[#3D5166] hover:text-[#0F5132] font-medium transition-colors">
               List Property
             </Link>
-            <Link href="/about" className="nav-link text-sm text-[#3D5166] hover:text-[#0F5132] font-medium transition-colors">
+            <Link href="/about" className="nav-link text-xs sm:text-sm text-[#3D5166] hover:text-[#0F5132] font-medium transition-colors">
               How it Works
             </Link>
-            <div className="w-px h-5 bg-[#E2E8F0]" />
+            <div className="w-px h-4 sm:h-5 bg-[#E2E8F0]" />
             <StellarBadge />
           </div>
 
           {/* CTA */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-2 sm:gap-3">
             <Button variant="ghost" size="sm">Sign in</Button>
             <Button variant="primary" size="sm">Get started</Button>
           </div>
 
           {/* Mobile hamburger */}
           <button
-            className="md:hidden p-2 rounded-lg text-[#3D5166] hover:bg-[#0F5132]/5"
+            className="md:hidden p-1.5 sm:p-2 rounded-lg text-[#3D5166] hover:bg-[#0F5132]/5"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg className="w-4.5 h-4.5 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               {mobileOpen
                 ? <path d="M6 18L18 6M6 6l12 12" />
                 : <path d="M4 6h16M4 12h16M4 18h16" />}
@@ -61,7 +61,7 @@ export function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-[#E2E8F0] bg-white px-4 py-4 space-y-3">
+        <div className="md:hidden border-t border-[#E2E8F0] bg-white px-3 sm:px-4 py-3 sm:py-4 space-y-2 sm:space-y-3">
           <MobileLink href="/listings" label="Browse Homes" />
           <MobileLink href="/landlord" label="List Property" />
           <MobileLink href="/about" label="How it Works" />
