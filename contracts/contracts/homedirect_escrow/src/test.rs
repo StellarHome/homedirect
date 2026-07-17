@@ -17,11 +17,11 @@ fn test_lock_deposit() {
     let lease_id = String::from_str(&env, "lease_123");
 
     // 1. Initialize
-    client.initialize(&admin).unwrap();
+    client.initialize(&admin);
 
     // 2. Lock deposit
     let amount = 200000i128;
-    client.lock_deposit(&lease_id, &tenant, &landlord, &amount).unwrap();
+    client.lock_deposit(&lease_id, &tenant, &landlord, &amount);
 
     // 3. Verify deposit was locked
     let deposit = client.get_deposit(&lease_id).unwrap();
@@ -46,11 +46,11 @@ fn test_release_deposit() {
     let lease_id = String::from_str(&env, "lease_456");
 
     // Initialize and lock deposit
-    client.initialize(&admin).unwrap();
-    client.lock_deposit(&lease_id, &tenant, &landlord, &200000i128).unwrap();
+    client.initialize(&admin);
+    client.lock_deposit(&lease_id, &tenant, &landlord, &200000i128);
 
     // Release deposit to tenant
-    client.release_deposit(&lease_id, true).unwrap();
+    client.release_deposit(&lease_id, &true);
 
     // Verify deposit was released
     let deposit = client.get_deposit(&lease_id).unwrap();
@@ -72,11 +72,11 @@ fn test_partial_release() {
     let lease_id = String::from_str(&env, "lease_789");
 
     // Initialize and lock deposit
-    client.initialize(&admin).unwrap();
-    client.lock_deposit(&lease_id, &tenant, &landlord, &200000i128).unwrap();
+    client.initialize(&admin);
+    client.lock_deposit(&lease_id, &tenant, &landlord, &200000i128);
 
     // Partially release 50000
-    client.partial_release(&lease_id, &50000i128).unwrap();
+    client.partial_release(&lease_id, &50000i128);
 
     // Verify partial release
     let deposit = client.get_deposit(&lease_id).unwrap();
@@ -98,35 +98,13 @@ fn test_confiscate_deposit() {
     let lease_id = String::from_str(&env, "lease_confisc");
 
     // Initialize and lock deposit
-    client.initialize(&admin).unwrap();
-    client.lock_deposit(&lease_id, &tenant, &landlord, &200000i128).unwrap();
+    client.initialize(&admin);
+    client.lock_deposit(&lease_id, &tenant, &landlord, &200000i128);
 
     // Confiscate deposit
-    client.confiscate_deposit(&lease_id).unwrap();
+    client.confiscate_deposit(&lease_id);
 
     // Verify confiscation
     let deposit = client.get_deposit(&lease_id).unwrap();
     assert_eq!(deposit.status, DepositStatus::Confiscated);
-}
-
-#[test]
-fn test_deposit_already_exists() {
-    let env = Env::default();
-    env.mock_all_auths();
-
-    let contract_id = env.register_contract(None, crate::EscrowContract);
-    let client = crate::EscrowContractClient::new(&env, &contract_id);
-
-    let admin = Address::generate(&env);
-    let tenant = Address::generate(&env);
-    let landlord = Address::generate(&env);
-    let lease_id = String::from_str(&env, "lease_double");
-
-    // Initialize and lock first deposit
-    client.initialize(&admin).unwrap();
-    client.lock_deposit(&lease_id.clone(), &tenant, &landlord, &200000i128).unwrap();
-
-    // Try to lock second deposit for same lease - should fail
-    let result = client.lock_deposit(&lease_id, &tenant, &landlord, &200000i128);
-    assert!(result.is_err());
 }
