@@ -58,6 +58,10 @@ impl EscrowContract {
     ) -> Option<types::Deposit> {
         storage::get_deposit(&env, lease_id)
     }
+
+    pub fn set_admin(env: Env, new_admin: Address) -> Result<(), types::Error> {
+        logic::set_admin(&env, new_admin)
+    }
 }
 
 #[cfg(test)]

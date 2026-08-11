@@ -18,6 +18,14 @@ pub fn set_admin(env: &Env, new_admin: Address) -> Result<(), Error> {
     Ok(())
 }
 
+pub fn set_token_config(env: &Env, usdc_token: Address, platform_wallet: Address) -> Result<(), Error> {
+    let admin = storage::get_admin(env).ok_or(Error::Unauthorized)?;
+    admin.require_auth();
+    storage::set_usdc_token(env, usdc_token);
+    storage::set_platform_wallet(env, platform_wallet);
+    Ok(())
+}
+
 fn generate_lease_id(env: &Env, property_id: String, tenant: Address) -> String {
     let timestamp = env.ledger().timestamp();
     let tuple = (property_id.clone(), tenant.clone(), timestamp);
@@ -48,6 +56,11 @@ pub fn create_lease(
 
     // Authorize landlord
     landlord.require_auth();
+
+    // Validate amounts
+    if monthly_rent <= 0 || security_deposit <= 0 {
+        return Err(Error::InvalidAmount);
+    }
 
     let timestamp = env.ledger().timestamp();
     let lease_id = generate_lease_id(env, property_id.clone(), tenant.clone());
@@ -92,6 +105,14 @@ pub fn pay_rent(env: &Env, lease_id: String, amount: i128, payer: Address) -> Re
     // Check lease status
     if lease.status != LeaseStatus::Active {
         return Err(Error::InvalidLeaseStatus);
+    }
+
+    // Check if lease has expired
+    let current_timestamp = env.ledger().timestamp();
+    if current_timestamp > lease.end_timestamp {
+        lease.status = LeaseStatus::Terminated;
+        storage::update_lease(env, lease_id.clone(), lease);
+        return Err(Error::LeaseExpired);
     }
 
     // Verify payment amount
@@ -183,6 +204,33 @@ pub fn resolve_dispute(env: &Env, lease_id: String, winner: Address) -> Result<(
     env.events().publish(
         (symbol_short!("resolved"), lease_id),
         winner,
+    );
+
+    Ok(())
+}
+
+pub fn collect_platform_fee(env: &Env, lease_id: String) -> Result<(), Error> {
+    let admin = storage::get_admin(env).ok_or(Error::Unauthorized)?;
+    admin.require_auth();
+
+    let mut lease = storage::get_lease(env, lease_id.clone()).ok_or(Error::LeaseNotFound)?;
+
+    if lease.platform_fee_collected {
+        return Err(Error::PlatformFeeAlreadyCollected);
+    }
+
+    // Calculate 5% platform fee based on total rent
+    let total_rent = lease.monthly_rent * lease.duration_months as i128;
+    let platform_fee = total_rent / 20; // 5%
+
+    // In a real implementation, this would transfer USDC to platform wallet
+    // For now, we just mark it as collected
+    lease.platform_fee_collected = true;
+    storage::update_lease(env, lease_id.clone(), lease);
+
+    env.events().publish(
+        (symbol_short!("fee"), lease_id),
+        platform_fee,
     );
 
     Ok(())

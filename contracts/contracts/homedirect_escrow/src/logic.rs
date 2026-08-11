@@ -11,6 +11,13 @@ pub fn initialize(env: &Env, admin: Address) -> Result<(), Error> {
     Ok(())
 }
 
+pub fn set_admin(env: &Env, new_admin: Address) -> Result<(), Error> {
+    let admin = storage::get_admin(env).ok_or(Error::Unauthorized)?;
+    admin.require_auth();
+    storage::set_admin(env, &new_admin);
+    Ok(())
+}
+
 pub fn lock_deposit(
     env: &Env,
     lease_id: String,

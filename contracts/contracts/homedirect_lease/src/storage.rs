@@ -27,6 +27,30 @@ pub fn get_admin(env: &Env) -> Option<Address> {
         .get::<DataKey, Address>(&DataKey::Admin)
 }
 
+pub fn set_usdc_token(env: &Env, token_address: Address) {
+    env.storage()
+        .instance()
+        .set::<DataKey, Address>(&DataKey::UsdcToken, &token_address);
+}
+
+pub fn get_usdc_token(env: &Env) -> Option<Address> {
+    env.storage()
+        .instance()
+        .get::<DataKey, Address>(&DataKey::UsdcToken)
+}
+
+pub fn set_platform_wallet(env: &Env, wallet_address: Address) {
+    env.storage()
+        .instance()
+        .set::<DataKey, Address>(&DataKey::PlatformWallet, &wallet_address);
+}
+
+pub fn get_platform_wallet(env: &Env) -> Option<Address> {
+    env.storage()
+        .instance()
+        .get::<DataKey, Address>(&DataKey::PlatformWallet)
+}
+
 pub fn save_lease(env: &Env, lease_id: String, lease: Lease) {
     env.storage()
         .instance()

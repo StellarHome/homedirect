@@ -5,6 +5,8 @@ use soroban_sdk::{contracttype, contracterror, Address, String, Symbol};
 pub enum DataKey {
     Version,
     Admin,
+    UsdcToken,
+    PlatformWallet,
     Lease(String),
     PropertyLease(String), // property_id -> lease_id mapping
 }
@@ -19,6 +21,11 @@ pub enum Error {
     InvalidLeaseStatus = 5,
     InsufficientPayment = 6,
     PropertyAlreadyLeased = 7,
+    TokenNotSet = 8,
+    TransferFailed = 9,
+    InvalidAmount = 10,
+    LeaseExpired = 11,
+    PlatformFeeAlreadyCollected = 12,
 }
 
 #[contracttype]

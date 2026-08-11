@@ -19,6 +19,14 @@ impl LeaseContract {
         1
     }
 
+    pub fn set_admin(env: Env, new_admin: Address) -> Result<(), types::Error> {
+        logic::set_admin(&env, new_admin)
+    }
+
+    pub fn set_token_config(env: Env, usdc_token: Address, platform_wallet: Address) -> Result<(), types::Error> {
+        logic::set_token_config(&env, usdc_token, platform_wallet)
+    }
+
     pub fn create_lease(
         env: Env,
         landlord: Address,
@@ -76,6 +84,13 @@ impl LeaseContract {
         property_id: soroban_sdk::String,
     ) -> Option<soroban_sdk::String> {
         storage::get_lease_by_property(&env, property_id)
+    }
+
+    pub fn collect_platform_fee(
+        env: Env,
+        lease_id: soroban_sdk::String,
+    ) -> Result<(), types::Error> {
+        logic::collect_platform_fee(&env, lease_id)
     }
 }
 
