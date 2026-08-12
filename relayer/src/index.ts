@@ -5,6 +5,8 @@ import { leaseRouter } from "./routes/lease";
 import { propertyRouter } from "./routes/property";
 import { userRouter } from "./routes/user";
 import { webhookRouter } from "./routes/webhook";
+import { paymentRouter } from "./routes/payments";
+import { kycRouter } from "./routes/kyc";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -24,6 +26,8 @@ app.use("/api/v1/leases", leaseRouter);
 app.use("/api/v1/properties", propertyRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/webhooks", webhookRouter);
+app.use("/api/v1/payments", paymentRouter);
+app.use("/api/v1/kyc", kycRouter);
 
 // ── 404 handler ────────────────────────────────────────────────────
 app.use((_req, res) => {

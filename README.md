@@ -43,24 +43,62 @@ HomeDirect is a direct landlord-to-tenant rental platform:
 homedirect/
 ├── frontend/               # Next.js 14 + TypeScript + Tailwind CSS
 │   ├── app/
-│   │   ├── components/     # UI, layout, listings components
-│   │   ├── listings/       # Browse & detail pages
-│   │   ├── landlord/       # Landlord dashboard & listing flow
-│   │   └── tenant/         # Tenant profile & applications
-│   └── lib/                # Shared utilities & mock data
+│   │   ├── components/     # UI components (WalletConnect, etc.)
+│   │   ├── dashboard/     # Landlord and tenant dashboards
+│   │   │   ├── landlord/  # Property listing management
+│   │   │   └── tenant/    # Application and lease management
+│   │   └── page.tsx       # Homepage
+│   ├── hooks/              # React hooks (useStellarWallet)
+│   ├── lib/
+│   │   └── stellar/       # Stellar wallet integration
+│   └── Dockerfile
 │
 ├── contracts/              # Stellar Soroban smart contracts (Rust)
-│   ├── homedirect_lease/   # Lease creation, rent payments, dispute
+│   ├── homedirect_lease/   # Lease creation, rent payments, disputes
+│   │   ├── src/
+│   │   │   ├── lib.rs      # Contract interface
+│   │   │   ├── logic.rs    # Business logic
+│   │   │   ├── storage.rs  # Storage operations
+│   │   │   ├── types.rs    # Type definitions
+│   │   │   └── test.rs     # Unit tests
+│   │   └── Cargo.toml
 │   └── homedirect_escrow/  # Security deposit escrow logic
+│       ├── src/
+│       │   ├── lib.rs
+│       │   ├── logic.rs
+│       │   ├── storage.rs
+│       │   ├── types.rs
+│       │   └── test.rs
+│       └── Cargo.toml
 │
 ├── relayer/                # Node.js backend / Stellar relayer
-│   └── src/
-│       ├── routes/         # Express API routes
-│       └── services/       # Stellar SDK service layer
+│   ├── src/
+│   │   ├── routes/         # Express API routes
+│   │   │   ├── lease.ts    # Lease endpoints
+│   │   │   ├── property.ts # Property endpoints
+│   │   │   ├── user.ts     # User endpoints
+│   │   │   ├── payments.ts # Paystack integration
+│   │   │   ├── kyc.ts      # Dojah KYC endpoints
+│   │   │   └── webhook.ts  # Webhook handlers
+│   │   ├── services/
+│   │   │   ├── stellar.ts  # Stellar SDK integration
+│   │   │   ├── paystack.ts # Paystack service
+│   │   │   └── dojah.ts    # Dojah KYC service
+│   │   ├── database/
+│   │   │   ├── schema.sql  # PostgreSQL schema
+│   │   │   └── models.ts   # TypeScript models
+│   │   └── index.ts        # Express app entry
+│   ├── docs/
+│   │   └── openapi.yaml    # API documentation
+│   ├── Dockerfile
+│   └── package.json
 │
-└── .github/
-    ├── ISSUE_TEMPLATE/     # Bug reports, feature requests, contract issues
-    └── workflows/          # CI — lint, test, contract build
+├── scripts/                # Deployment and utility scripts
+│   └── deploy.sh           # Docker deployment script
+│
+├── docker-compose.yml      # Multi-container orchestration
+├── .env.example           # Environment variables template
+└── README.md
 ```
 
 ---
@@ -116,6 +154,26 @@ stellar contract deploy \
   --network testnet
 ```
 
+### 6. Deploy with Docker (Recommended)
+
+```bash
+# Copy environment variables
+cp .env.example .env
+# Edit .env with your configuration
+
+# Deploy all services
+./scripts/deploy.sh
+
+# Or manually with docker-compose
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+```
+
 ---
 
 ## Environment Variables
@@ -152,9 +210,16 @@ Manages the full lifecycle of a rental agreement:
 - `release_deposit` — returns deposit to tenant after successful tenancy
 - `raise_dispute` — flags lease for arbitration
 - `resolve_dispute` — admin releases deposit to winning party
+- `collect_platform_fee` — collects 5% platform fee on total rent
+- `set_token_config` — configures USDC token and platform wallet addresses
 
-### `homedirect_escrow` *(coming soon)*
-Standalone escrow for multi-property landlords and batch deposit management.
+### `homedirect_escrow`
+Standalone escrow for multi-property landlords and batch deposit management:
+- `lock_deposit` — locks security deposit in escrow
+- `release_deposit` — releases full deposit to tenant
+- `partial_release` — releases partial deposit amount
+- `confiscate_deposit` — confiscates deposit to landlord (dispute resolution)
+- `set_admin` — updates contract admin address
 
 ---
 
@@ -162,14 +227,15 @@ Standalone escrow for multi-property landlords and batch deposit management.
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | Next.js 14, TypeScript, Tailwind CSS |
+| Frontend | Next.js 14, TypeScript, Tailwind CSS, Freighter Wallet |
 | Smart Contracts | Rust, Soroban SDK (Stellar) |
 | Relayer / Backend | Node.js, Express, TypeScript |
 | Payments (NGN) | Paystack |
 | Blockchain | Stellar Network + Soroban |
 | Stablecoin | USDC on Stellar |
 | KYC | Dojah (NIN / BVN verification) |
-| Database | PostgreSQL + Redis *(relayer)* |
+| Database | PostgreSQL |
+| Deployment | Docker, Docker Compose |
 
 ---
 

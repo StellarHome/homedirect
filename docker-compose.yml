@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: homedirect-postgres
+    environment:
+      POSTGRES_USER: homedirect
+      POSTGRES_PASSWORD: homedirect_password
+      POSTGRES_DB: homedirect
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./relayer/src/database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U homedirect"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - homedirect-network
+
+  # Relayer Backend
+  relayer:
+    build:
+      context: ./relayer
+      dockerfile: Dockerfile
+    container_name: homedirect-relayer
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DATABASE_URL: postgresql://homedirect:homedirect_password@postgres:5432/homedirect
+      STELLAR_NETWORK: testnet
+      PAYSTACK_SECRET_KEY: ${PAYSTACK_SECRET_KEY}
+      DOJAH_API_KEY: ${DOJAH_API_KEY}
+      DOJAH_APP_ID: ${DOJAH_APP_ID}
+      PLATFORM_EMAIL: ${PLATFORM_EMAIL}
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    networks:
+      - homedirect-network
+    restart: unless-stopped
+
+  # Frontend (Next.js)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: homedirect-frontend
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: http://localhost:3001/api/v1
+      NEXT_PUBLIC_STELLAR_NETWORK: testnet
+    ports:
+      - "3000:3000"
+    depends_on:
+      - relayer
+    networks:
+      - homedirect-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  homedirect-network:
+    driver: bridge
