@@ -29,7 +29,7 @@ class StellarWallet {
    * Check if Freighter wallet is installed
    */
   isAvailable(): boolean {
-    return !!(window as any).freighter;
+    return typeof window !== 'undefined' && !!(window as Window & { freighter?: unknown }).freighter;
   }
 
   /**
@@ -41,8 +41,12 @@ class StellarWallet {
     }
 
     try {
-      const freighter = (window as any).freighter;
-      
+      const freighter = (window as Window & { freighter?: { getPublicKey: () => Promise<string> } }).freighter;
+
+      if (!freighter) {
+        throw new Error('Freighter wallet not available');
+      }
+
       // Request access to public key
       const publicKey = await freighter.getPublicKey();
       
@@ -95,7 +99,12 @@ class StellarWallet {
     }
 
     try {
-      const freighter = (window as any).freighter;
+      const freighter = (window as Window & { freighter?: { signXDR: (xdr: string) => Promise<string> } }).freighter;
+
+      if (!freighter) {
+        throw new Error('Freighter wallet not available');
+      }
+
       const signedXdr = await freighter.signXDR(xdr);
 
       return {
@@ -220,11 +229,15 @@ class StellarWallet {
    */
   async switchNetwork(network: 'testnet' | 'public'): Promise<void> {
     try {
-      const freighter = (window as any).freighter;
-      
+      const freighter = (window as Window & { freighter?: { setNetwork: (network: 'testnet' | 'public') => Promise<void> } }).freighter;
+
+      if (!freighter) {
+        throw new Error('Freighter wallet not available');
+      }
+
       // Freighter allows network switching
       await freighter.setNetwork(network);
-      
+
       this.network = network;
     } catch (error) {
       console.error('Network switch error:', error);

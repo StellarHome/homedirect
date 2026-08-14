@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -7,6 +8,7 @@ import { userRouter } from "./routes/user";
 import { webhookRouter } from "./routes/webhook";
 import { paymentRouter } from "./routes/payments";
 import { kycRouter } from "./routes/kyc";
+import { initializeDatabase, testConnection } from "./database/connection";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -40,9 +42,32 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
   res.status(500).json({ error: "Internal server error" });
 });
 
-app.listen(PORT, () => {
-  console.log(`HomeDirect Relayer running on port ${PORT}`);
-  console.log(`Stellar network: ${process.env.STELLAR_NETWORK || "testnet"}`);
-});
+// ── Initialize database ─────────────────────────────────────────────
+async function startServer(): Promise<void> {
+  try {
+    // Initialize database connection
+    initializeDatabase();
+
+    // Test database connection
+    const dbConnected = await testConnection();
+    if (!dbConnected) {
+      console.warn('Database connection failed. Starting server without database...');
+    } else {
+      console.log('Database connected successfully');
+    }
+
+    // Start server
+    app.listen(PORT, () => {
+      console.log(`HomeDirect Relayer running on port ${PORT}`);
+      console.log(`Stellar network: ${process.env.STELLAR_NETWORK || "testnet"}`);
+      console.log(`Database: ${dbConnected ? 'Connected' : 'Not connected'}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+}
+
+startServer();
 
 export default app;
