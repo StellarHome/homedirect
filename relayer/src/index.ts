@@ -8,6 +8,7 @@ import { userRouter } from "./routes/user";
 import { webhookRouter } from "./routes/webhook";
 import { paymentRouter } from "./routes/payments";
 import { kycRouter } from "./routes/kyc";
+import authRouter from "./auth/routes";
 import { initializeDatabase, testConnection } from "./database/connection";
 
 const app = express();
@@ -24,6 +25,7 @@ app.get("/health", (_req, res) => {
 });
 
 // ── Routes ─────────────────────────────────────────────────────────
+app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/leases", leaseRouter);
 app.use("/api/v1/properties", propertyRouter);
 app.use("/api/v1/users", userRouter);

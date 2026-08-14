@@ -8,6 +8,7 @@ export interface User {
   first_name?: string;
   last_name?: string;
   role: 'landlord' | 'tenant' | 'admin';
+  password_hash?: string;
   kyc_verified: boolean;
   kyc_verified_at?: Date;
   kyc_method?: 'bvn' | 'nin' | 'both';

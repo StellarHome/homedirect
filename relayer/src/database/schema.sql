@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
     first_name VARCHAR(100),
     last_name VARCHAR(100),
     role VARCHAR(20) NOT NULL CHECK (role IN ('landlord', 'tenant', 'admin')),
+    password_hash VARCHAR(255),
     kyc_verified BOOLEAN DEFAULT FALSE,
     kyc_verified_at TIMESTAMP,
     kyc_method VARCHAR(20), -- 'bvn', 'nin', 'both'
